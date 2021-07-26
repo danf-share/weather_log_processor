@@ -1,7 +1,8 @@
 # Weather Log Processor
 
-Parse a given log file for 5xx errors
-Return temperatures in top three countries with errors
+Parse a given log file for 5xx errors.
+
+Return temperatures in the three countries with the highest numbers of errors.
 
 Output is in the format
 
