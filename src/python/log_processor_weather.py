@@ -22,6 +22,9 @@ def main():
     log_path = sys.argv[1]
     api_key = sys.argv[2]
 
+    if not validate_api_key(api_key):
+        sys.exit("API key does not look correct. Please try again")
+
     # get the log file
     with open(log_path, "r") as file:
         handle_log_file(file)
@@ -32,6 +35,8 @@ def main():
 
     top_three_countries = countries_sorted_by_errors[0:3]
 
+    # output format:
+    # <Country Code #1> <Lines Matched> <Temperature in C>
     for country_code, count in top_three_countries:
         print(
             f"{country_code} {count} {get_temperature_at_lat_lon(COUNTRY_LAT_LONS[country_code], api_key)}"
@@ -98,6 +103,13 @@ def check_weekday(datestamp):
     if datestamp.strftime("%A") in ["Saturday", "Sunday"]:
         return False
     return True
+
+
+# rudimentary check of key format
+def validate_api_key(api_key):
+    if len(api_key) == 33:
+        return True
+    return False
 
 
 if __name__ == "__main__":
