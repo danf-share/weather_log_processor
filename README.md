@@ -22,7 +22,7 @@ cd weather_log_processor
 
 ### Build the Docker image
 ```
-docker build --tag log_processor_weather --file log_processor_weather.Dockerfile .
+docker build --tag log_processor_weather .
 ```
 
 ### Run the container
