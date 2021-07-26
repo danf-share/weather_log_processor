@@ -16,3 +16,7 @@ RUN apt-get install -y libssl-dev \
                        wget
 RUN wget https://www.python.org/ftp/python/$PYTHON_VERSION/Python-$PYTHON_VERSION.tgz
 RUN tar xzvf Python-$PYTHON_VERSION.tgz
+WORKDIR Python-$PYTHON_VERSION
+RUN ./configure
+RUN make
+RUN make install
