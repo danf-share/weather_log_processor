@@ -79,7 +79,7 @@ def handle_5xx_error(line):
 
 
 def get_temperature_at_lat_lon(latlon, api_key):
-    url = f"https://api.openweathermap.org/data/2.5/weather?lat={latlon[0]}&lon={latlon[1]}&appid={api_key}"
+    url = f"https://api.openweathermap.org/data/2.5/weather?lat={latlon[0]}&lon={latlon[1]}&appid={api_key}&units=metric"
 
     response = requests.get(url)
     data = json.loads(response.text)
