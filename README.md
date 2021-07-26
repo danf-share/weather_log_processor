@@ -29,5 +29,5 @@ docker build --tag log_processor_weather --file log_processor_weather.Dockerfile
 Mount in the log file to be processed
 Include the path and API key as arguments to the run command
 ```
-docker run --rm -v (pwd)/sample.log:/tmp/sample.log log_processor_weather /tmp/sample.log API_KEY
+docker run --rm -v $(pwd)/sample.log:/tmp/sample.log log_processor_weather /tmp/sample.log API_KEY
 ```
