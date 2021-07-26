@@ -5,25 +5,37 @@
 import sys
 import datetime
 import geoip2.database
+import requests
+import json
 
 GEO_DB_PATH = "/opt/log_processor_weather/GeoLite2-City.mmdb"
 
 COUNTRY_ERRORS_COUNT = {}
+COUNTRY_LAT_LONS = {}
 
 
 def main():
     # quick validation of arguments
-    if len(sys.argv) < 2:
-        sys.exit("Please pass a log file to the script")
+    if len(sys.argv) < 3:
+        sys.exit("Syntax: log_processor_weather.py FILEPATH API_KEY")
 
-    # get the file
-    with open(sys.argv[1], "r") as file:
+    log_path = sys.argv[1]
+    api_key = sys.argv[2]
+
+    # get the log file
+    with open(log_path, "r") as file:
         handle_log_file(file)
 
-    sorted_words = sorted(
+    countries_sorted_by_errors = sorted(
         COUNTRY_ERRORS_COUNT.items(), key=lambda item: item[1], reverse=True
     )
-    print(sorted_words)
+
+    top_three_countries = countries_sorted_by_errors[0:3]
+
+    for country_code, count in top_three_countries:
+        print(
+            f"{country_code} {count} {get_temperature_at_lat_lon(COUNTRY_LAT_LONS[country_code], api_key)}"
+        )
 
 
 # iterate through log lines and handle 5xx errors
@@ -47,12 +59,27 @@ def handle_5xx_error(line):
         remote_ip = line[0]
         try:
             city = get_city_based_on_ip(remote_ip)
-            country = city.country.names["en"]
+            country = city.country.iso_code
             increment_country_count(country)
 
+            if country not in COUNTRY_LAT_LONS:
+                COUNTRY_LAT_LONS[country] = (
+                    city.location.latitude,
+                    city.location.longitude,
+                )
+
         except:
-            # handle ip not in the database
-            print(f"Can't look up {remote_ip}")
+            # ip is not in the database
+            pass
+
+
+def get_temperature_at_lat_lon(latlon, api_key):
+    url = f"https://api.openweathermap.org/data/2.5/weather?lat={latlon[0]}&lon={latlon[1]}&appid={api_key}"
+
+    response = requests.get(url)
+    data = json.loads(response.text)
+
+    return data["main"]["temp"]
 
 
 def increment_country_count(country):
