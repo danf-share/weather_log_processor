@@ -23,7 +23,6 @@ def main():
     api_key = sys.argv[2]
 
     if not validate_api_key(api_key):
-        print(len(api_key))
         sys.exit("API key does not look correct. Please try again")
 
     # get the log file
