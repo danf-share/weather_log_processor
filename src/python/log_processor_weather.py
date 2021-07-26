@@ -23,6 +23,7 @@ def main():
     api_key = sys.argv[2]
 
     if not validate_api_key(api_key):
+        print(len(api_key))
         sys.exit("API key does not look correct. Please try again")
 
     # get the log file
@@ -107,7 +108,7 @@ def check_weekday(datestamp):
 
 # rudimentary check of key format
 def validate_api_key(api_key):
-    if len(api_key) == 33:
+    if len(api_key) == 32:
         return True
     return False
 
